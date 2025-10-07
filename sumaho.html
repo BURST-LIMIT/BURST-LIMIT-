@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BURST LIMIT 出場選手一覧(スマホ版)</title>
+<link href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+body{margin:0;font-family:'Arial',sans-serif;background:#f0f0f0;color:#111;scroll-behavior:smooth;transition:0.30s;}
+body.dark{background:#111;color:#f0f0f0;}
+a{text-decoration:none;color:inherit;}
+button{cursor:pointer;}
+header{position:fixed;top:0;width:100%;display:flex;justify-content:space-between;align-items:center;padding:150px 50px;background:#111;color:#fff;z-index:1000;transition:0.3s;}
+header.dark{background:#222;}
+header h1{font-size:1.5rem;color:#f7d700;}
+nav a{margin-left:30px;font-weight:bold;transition:0.3s;}
+nav a:hover{color:#f7d700;}
+.hero{height:60vh;display:flex;justify-content:center;align-items:center;text-align:center;background:url('https://placehold.co/1200x600?text=BURST+LIMIT+Players') no-repeat center/cover;position:relative;}
+.hero h2{font-size:300rem;color:#f7d700;background:rgba(0,0,0,0.5);padding:75px;border-radius:20px;}
+.fade-in{opacity:10;transform:translateY(50px);transition:2s;}
+.fade-in.active{opacity:1;transform:translateY(0);}
+section{padding:100px 20px 50px -10px;max-width:1200px;margin:auto;}
+table{width:390px;border-collapse:collapse;margin-top:0px;}
+th,td{padding:0px;border:2px solid #ccc;text-align:left;}
+th{background:#f7d700;color:#111;}
+.filter-container{display:flex;gap:10px;margin-bottom:10px;}
+.player-card{border:1px solid #ccc;padding:15px;border-radius:10px;margin-bottom:10px;background:#fff;box-shadow:0 5px 15px rgba(0,0,0,0.1);}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);justify-content:center;align-items:center;z-index:2000;}
+.modal-content{background:#fff;padding:20px;border-radius:10px;max-width:600px;width:90%;position:relative;}
+.close-btn{position:absolute;top:10px;right:10px;font-size:1.5rem;font-weight:bold;cursor:pointer;}
+.swiper{width:90%;max-width:1000px;padding-bottom:50px;margin:auto;}
+.swiper-slide{display:flex;flex-direction:column;align-items:center;background:#fff;padding:20px;border-radius:10px;box-shadow:0 5px 20px rgba(0,0,0,0.2);}
+.swiper-slide img{width:100%;border-radius:10px;}
+footer{padding:30px;text-align:center;background:#111;color:#fff;}
+footer a{color:#f7d700;margin:0 3px;}
+#progressBar{position:fixed;top:0;left:0;height:5px;background:#f7d700;width:0%;z-index:3000;}
+.chip{position:fixed;top:120px;right:20px;background:#f7d700;color:#111;padding:8px 70px;border-radius:20px;box-shadow:0 5px 15px rgba(0,0,0,0.3);z-index:3000;}
+@media(max-width:700px){header{padding:10px 0px;}.hero h2{font-size:2rem;}nav a{margin-left:18px;}table th,table td{font-size:14px;}}
+</style>
+</head>
+<body>
+
+<div id="progressBar"></div>
+<div class="chip">最新情報:  秋の大会10/18~19</div>
+
+<header>
+  <h1>BURST LIMIT 出場選手一覧</h1>
+  <nav>
+    <a href="#hero">トップ</a>
+    <a href="#tournaments">大会情報</a>
+    <a href="#players">選手名簿</a>
+    <a href="#about">協会</a>
+  </nav>
+  <button id="modeToggle">🌙</button>
+</header>
+
+<section id="hero" class="hero fade-in">
+  <h2>BURST LIMIT 出場選手情報</h2>
+</section>
+
+<!-- 大会情報 -->
+<section id="tournaments" class="fade-in">
+  <h2>大会情報</h2>
+  <table>
+    <tr><th>大会名</th><th>場所</th><th>開始時間</th><th>参加人数</th><th>参加選手一覧</th></tr>
+    <tr>
+      <td>秋のパワーリフティング大会</td>
+      <td>江別市青年センター</td>
+      <td>10/18 8:30</td>
+      <td>117人</td>
+      <td>
+        <button class="show-players">表示</button>
+        <ul class="players-list" style="display:none;">
+          <li>齊藤恵</li>
+          <li>宮﨑優花</li>
+          <li>安部栄子</li>
+          <li>北村妙美</li>
+          <li>齊藤夕大</li>
+          <li>沢航成</li>
+
+          <li>吉岡宗嗣</li>
+          <li>今井厚仁</li>
+          <li>入交将昭</li>
+          <li>雨宮玄(北見)</li>
+          <li>松原幹(北見)</li>
+        </ul>
+      </td>
+    </tr>
+  </table>
+    <table>
+    <tr>
+      <td>東北ブロック ベンチプレス選手権大会</td>
+      <td>洞爺湖文化センター</td>
+      <td>11/16 8:30</td>
+      <td>無表示人</td>
+      <td>
+        <button class="show-players">表示</button>
+        <ul class="players-list" style="display:none;">
+          <li></li>
+          <li></li>
+          <li></li>
+        </ul>
+      </td>
+    </tr>
+  </table>
+</section>
+
+<!-- 選手名簿 -->
+<section id="players" class="fade-in">
+  <h2>選手一覧</h2>
+  <div class="filter-container">
+    <select id="categoryFilter">
+      <option value="all">全て</option>
+      <option value="men">男子</option>
+      <option value="women">女子</option>
+    </select>
+    <input type="text" id="playerSearch" placeholder="使用できません。">
+  </div>
+
+  <!-- 選手カード -->
+  <div class="player-card" data-category="women">
+    <strong>宮﨑優花</strong> (女子52kg級)
+  </div>
+  <div class="player-card" data-category="women">
+    <strong>齊藤恵</strong> (女子47kg級)
+  </div>
+    <div class="player-card" data-category="women">
+    <strong>安部 栄子</strong> (女子57kg級)
+  </div>
+    <div class="player-card" data-category="women">
+    <strong>北村 妙美</strong> (女子76kg級)
+  </div>
+    <div class="player-card" data-category="men">
+    <strong>齊藤 夕大</strong> (男子53kg級)
+  </div>
+    <div class="player-card" data-category="men">
+    <strong>沢 航成 </strong> (男子59kg級)
+  </div>
+    <div class="player-card" data-category="men">
+    <strong>吉岡 宗嗣</strong> (男子105kg級)
+  </div>
+      <div class="player-card" data-category="men">
+    <strong>今井 厚仁</strong> (男子105kg級)
+  </div>
+        <div class="player-card" data-category="men">
+    <strong>雨宮 玄(北見)</strong> (男子66kg級)
+  </div>
+          <div class="player-card" data-category="men">
+    <strong>松原 幹(北見)</strong> (男子66kg級)
+  </div>
+</section>
+
+<!-- モーダル -->
+<div id="playerModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn">&times;</span>
+    <h3 id="modalName">選手名</h3>
+    <p id="modalCategory">カテゴリー</p>
+    <p id="modalAge">年齢</p>
+    <p id="modalClub">所属クラブ</p>
+    <canvas id="modalChart" width="400" height="200"></canvas>
+  </div>
+</div>
+
+<!-- 協会について -->
+<section id="about" class="fade-in">
+  <h2>協会について</h2>
+  <p>北海道パワ－リフティング協会は、北海道におけるパワ－リフティング競技の愛好者を育成し、本競技の普及・発展に努めるとともに、会員相互の融和・協力を図ることを目的とした、日本パワ－リフティング協会の所属加盟団体です。</p>
+</section>
+
+<footer>
+  © 2025 BURST LIMIT | <a href="https://www.instagram.com/teamburstlimit?utm_source=ig_web_button_share_sheet&igsh=MmZqc2I5eXAxbDJ5">Instagram</a> | <a href="http://www.youtube.com/@BURSTLIMIT">YouTube</a>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+<script>
+// フェードイン
+const faders = document.querySelectorAll('.fade-in');
+const appearOnScroll = new IntersectionObserver((entries, observer)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){ entry.target.classList.add('active'); observer.unobserve(entry.target);}
+  });
+},{ threshold:0.1 });
+faders.forEach(fader=>appearOnScroll.observe(fader));
+
+const modal = document.getElementById('playerModal');
+const modalName = document.getElementById('modalName');
+const modalCategory = document.getElementById('modalCategory');
+const modalAge = document.getElementById('modalAge');
+const modalClub = document.getElementById('modalClub');
+const modalChartCtx = document.getElementById('modalChart').getContext('2d');
+let chart;
+
+document.querySelectorAll('.detail-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const name = btn.parentElement.querySelector('strong').textContent;
+    const data = playerData[name];
+    modalName.textContent = name;
+    modalCategory.textContent = data.category;
+    modalAge.textContent = data.age;
+    modalClub.textContent = data.club;
+    if(chart) chart.destroy();
+    chart = new Chart(modalChartCtx,{
+      type:'bar',
+      data:{labels:['スクワット','ベンチ','デッドリフト'], datasets:[{label:'重量(kg)', data:data.lifts, backgroundColor:'#f7d700'}]},
+      options:{responsive:true, scales:{y:{beginAtZero:true}}}
+    });
+    modal.style.display='flex';
+  });
+});
+document.querySelector('.close-btn').onclick=()=>{ modal.style.display='none'; };
+
+// 大会参加選手リスト
+document.querySelectorAll('.show-players').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const list = btn.nextElementSibling;
+    list.style.display = list.style.display==='none'?'block':'none';
+  });
+});
+
+// 選手フィルター＆検索
+const playerCards = document.querySelectorAll('.player-card');
+categoryFilter.addEventListener('change', filterPlayers);
+function filterPlayers(){
+  const cat = categoryFilter.value;
+  const search = playerSearch.value.toLowerCase();
+  playerCards.forEach(card=>{
+    const name = card.querySelector('strong').textContent.toLowerCase();
+    const category = card.dataset.category;
+    card.style.display = ((cat==='all'||cat===category) && name.includes(search))?'block':'none';
+  });
+}
+
+// ダーク／ライト切替
+const modeToggle = document.getElementById('modeToggle');
+modeToggle.onclick=()=>{
+  document.body.classList.toggle('dark');
+  modeToggle.textContent = document.body.classList.contains('dark') ? '☀️':'🌙';
+};
+
+// スクロール進行バー
+window.onscroll=()=>{
+  const winScroll=document.body.scrollTop || document.documentElement.scrollTop;
+  const height=document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  document.getElementById('progressBar').style.width=(winScroll/height)*100+'%';
+};
+</script>
+</body>
+</html>
